@@ -3,58 +3,73 @@ import {
   Switch,
   Route,
   Link,
-  useRouteMatch,
-  useParams
+  useParams,
+  useRouteMatch
 } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { loadUserAction, resetUserAction } from "../store/user/actions";
-import { userIdSelector, userIsLoadingSelector } from "../store/user/selectors";
+import { resetUserAction, loadUserAction } from "../store/user/actions";
+import { useSelector, useDispatch } from "react-redux";
+import { userIsLoadingSelector, userIdSelector } from "../store/user/selectors";
 
-export default function App() {
+export default function ModalGalleryExample() {
+  return <ModalSwitch />;
+}
+
+function ModalSwitch() {
   return (
     <div>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/about">About</Link>
-          </li>
-          <li>
-            <Link to="/users">Users</Link>
-          </li>
-        </ul>
-      </nav>
-
-      {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
       <Switch>
-        <Route path="/about">
-          <About />
-        </Route>
-        <Route path="/users">
-          <Users />
-        </Route>
-        <Route path="/">
-          <Home />
-        </Route>
+        <Route exact path={["/", "/user/:userId"]} children={<Home />} />
+        <Route
+          exact
+          path={["/gallery", "/gallery/user/:userId"]}
+          children={<Gallery />}
+        />
       </Switch>
+      <Route
+        path={["/gallery/user/:userId", "/user/:userId"]}
+        children={<Modal />}
+      />
     </div>
   );
 }
 
 function Home() {
-  return <h2>Home</h2>;
+  return (
+    <div>
+      <Link to="/gallery">Visit the Gallery</Link>
+      <h2>Featured Users</h2>
+      <ul>
+        <li>
+          <Link to={`/user/dan-wilt`}>Dan Wilt</Link>
+        </li>
+      </ul>
+    </div>
+  );
 }
 
-function About() {
-  return <h2>About</h2>;
+function Gallery() {
+  const { url } = useRouteMatch();
+
+  return (
+    <div>
+      <h2>Users</h2>
+      <Link to="/">Back to home</Link>
+      <ul>
+        <li>
+          <Link to={`${url}/user/dan-wilt`}>Dan Wilt</Link>
+        </li>
+        <li>
+          <Link to={`${url}/user/stu-pitt`}>Stu Pitt</Link>
+        </li>
+      </ul>
+    </div>
+  );
 }
 
-function User() {
+function Modal() {
   const dispatch = useDispatch();
-  let { userId } = useParams();
+  const { userId } = useParams();
+  const { url } = useRouteMatch();
   const isLoading = useSelector(userIsLoadingSelector);
 
   useEffect(
@@ -72,26 +87,32 @@ function User() {
 
   const user = useSelector(userIdSelector);
 
-  return <h1>{isLoading ? "loading!" : user}</h1>;
-}
-
-function Users() {
-  const { url, path } = useRouteMatch();
-
   return (
-    <>
-      <h2>Users</h2>
-      <ul>
-        <li>
-          <Link to={`${url}/dan-wilt`}>Dan Wilt</Link>
-        </li>
-        <li>
-          <Link to={`${url}/stu-pitt`}>Stu Pitt</Link>
-        </li>
-      </ul>
-      <Route path={`${path}/:userId`}>
-        <User />
-      </Route>
-    </>
+    <div
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+        background: "rgba(0, 0, 0, 0.15)"
+      }}
+    >
+      <div
+        className="modal"
+        style={{
+          position: "absolute",
+          background: "#fff",
+          top: 25,
+          left: "10%",
+          right: "10%",
+          padding: 15,
+          border: "2px solid #444"
+        }}
+      >
+        <h1>{isLoading ? "loading!" : user}</h1>
+        <Link to={url.split(/\/user/)[0]}>Close</Link>
+      </div>
+    </div>
   );
 }

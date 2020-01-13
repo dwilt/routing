@@ -14,7 +14,7 @@ interface UserState {
 
 const initialState: UserState = {
   userId: null,
-  loading: false
+  loading: true
 };
 
 export default function something(state = initialState, action: Actions) {
