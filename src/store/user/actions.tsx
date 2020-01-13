@@ -33,3 +33,9 @@ export const setUserAction = ({
     userId
   }
 });
+
+export interface ResetUserAction extends Action<"RESET_USER"> {}
+
+export const resetUserAction = (): ResetUserAction => ({
+  type: "RESET_USER"
+});

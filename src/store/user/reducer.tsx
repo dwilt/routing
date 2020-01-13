@@ -1,7 +1,11 @@
 import { LocationChangeAction } from "connected-react-router";
-import { LoadUserAction, SetUserAction } from "./actions";
+import { LoadUserAction, SetUserAction, ResetUserAction } from "./actions";
 
-type Actions = LocationChangeAction | LoadUserAction | SetUserAction;
+type Actions =
+  | LocationChangeAction
+  | LoadUserAction
+  | SetUserAction
+  | ResetUserAction;
 
 interface UserState {
   userId: null | string;
@@ -15,6 +19,9 @@ const initialState: UserState = {
 
 export default function something(state = initialState, action: Actions) {
   switch (action.type) {
+    case "RESET_USER":
+      return initialState;
+
     case "SET_USER": {
       const { userId } = action.payload;
 

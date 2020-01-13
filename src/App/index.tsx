@@ -7,7 +7,7 @@ import {
   useParams
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loadUserAction } from "../store/user/actions";
+import { loadUserAction, resetUserAction } from "../store/user/actions";
 import { userIdSelector, userIsLoadingSelector } from "../store/user/selectors";
 
 export default function App() {
@@ -33,7 +33,7 @@ export default function App() {
         <Route path="/about">
           <About />
         </Route>
-        <Route path={["/users"]}>
+        <Route path="/users">
           <Users />
         </Route>
         <Route path="/">
@@ -55,14 +55,22 @@ function About() {
 function User() {
   const dispatch = useDispatch();
   let { userId } = useParams();
-  const user = useSelector(userIdSelector);
   const isLoading = useSelector(userIsLoadingSelector);
+
+  useEffect(
+    () => () => {
+      dispatch(resetUserAction());
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     if (userId) {
       dispatch(loadUserAction({ userId }));
     }
   }, [userId, dispatch]);
+
+  const user = useSelector(userIdSelector);
 
   return <h1>{isLoading ? "loading!" : user}</h1>;
 }
