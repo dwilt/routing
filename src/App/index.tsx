@@ -18,14 +18,21 @@ function ModalSwitch() {
   return (
     <div>
       <Switch>
-        <Route exact path={["/", "/user/:userId"]} children={<Home />} />
         <Route
           exact
+          // this allows the home page to show the user modal as well
+          path={["/", "/user/:userId"]}
+          children={<Home />}
+        />
+        <Route
+          exact
+          // these 2 routes both render the gallery
           path={["/gallery", "/gallery/user/:userId"]}
           children={<Gallery />}
         />
       </Switch>
       <Route
+        // these are the routes that cause the modal to show
         path={["/gallery/user/:userId", "/user/:userId"]}
         children={<Modal />}
       />
