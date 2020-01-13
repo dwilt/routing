@@ -74,6 +74,7 @@ function Modal() {
 
   useEffect(
     () => () => {
+      // This resets the user reducer when it unmounts
       dispatch(resetUserAction());
     },
     [dispatch]
@@ -81,6 +82,7 @@ function Modal() {
 
   useEffect(() => {
     if (userId) {
+      // fetches the user on load AND if the userId changes
       dispatch(loadUserAction({ userId }));
     }
   }, [userId, dispatch]);

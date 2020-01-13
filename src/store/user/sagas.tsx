@@ -14,6 +14,10 @@ export default function* userSaga() {
   yield takeLatest(["LOAD_USER", "RESET_USER"], function*(
     action: LoadUserAction | ResetUserAction
   ) {
+    // this is a key. both the "LOAD_USER" and "RESET_USER" events fire this saga with a takeLatest
+    // Meaning, if multiple "LOAD_USER"/"RESET_USER" requests come in, only the latest pervails
+    // this allows us to capture if the user leaves the modal, which fires the resetUserAction,
+    // and prevents an in-flight call to the server to get a user to be swallowed
     if (action.type === "RESET_USER") {
       return;
     }
