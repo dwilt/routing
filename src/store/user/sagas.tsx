@@ -17,7 +17,7 @@ export default function* userSaga() {
     // this is a key. both the "LOAD_USER" and "RESET_USER" events fire this saga with a takeLatest
     // Meaning, if multiple "LOAD_USER"/"RESET_USER" requests come in, only the latest pervails
     // this allows us to capture if the user leaves the modal, which fires the resetUserAction,
-    // and prevents an in-flight call to the server to get a user to be swallowed
+    // and prevents an in-flight call to the server to complete and update the redux state with stale info
     if (action.type === "RESET_USER") {
       return;
     }
